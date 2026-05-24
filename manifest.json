@@ -1,0 +1,8 @@
+{
+  "name": "Freelance Contract Checker",
+  "short_name": "freelance-co",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#6366f1"
+}
