@@ -3,7 +3,7 @@
   "short_name": "freelance-co",
   "start_url": "/freelance-contract-checker/",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#6366f1",
   "theme_color": "#6366f1",
   "scope": "/freelance-contract-checker/"
 }
