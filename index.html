@@ -69,6 +69,18 @@ j=d.createElement(s),dl=l!="dataLayer"?"&l="+l:"";j.async=true;j.src=
             .result-value { font-size: 28px; }
         }
         /* ── サービス固有CSS ── */
+        .quiz-opt { width:100%; padding:12px 14px; margin-bottom:8px; border:2px solid #e5e7eb; border-radius:10px; font-size:14px; cursor:pointer; background:#fff; text-align:left; transition:border-color .15s, background .15s; }
+        .quiz-opt:hover { border-color:#7c3aed; background:#f5f3ff; }
+        .quiz-opt:active { transform:scale(0.99); background:#ede9fe; }
+        .quiz-opt:focus-visible { outline:3px solid #7c3aed; outline-offset:2px; }
+        #quiz-area { animation: fadeIn .25s ease; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+        .q-back-btn { background:none; border:none; color:#7c3aed; font-size:13px; cursor:pointer; padding:8px 0; text-decoration:underline; display:none; margin-top:4px; }
+        .score-bar-wrap { height:10px; background:#e5e7eb; border-radius:5px; overflow:hidden; margin:8px 0 16px; }
+        .score-bar-inner { height:100%; border-radius:5px; transition:width .6s ease; width:0%; }
+        .issues-box { background:#fef2f2; border:1px solid #fecaca; border-radius:10px; padding:12px 14px; margin:12px 0; }
+        .issues-box h4 { font-size:14px; font-weight:700; color:#dc2626; margin-bottom:6px; }
+        .issues-box li { font-size:13px; color:#374151; line-height:1.8; }
 
     
 @media print{
@@ -90,7 +102,7 @@ j=d.createElement(s),dl=l!="dataLayer"?"&l="+l:"";j.async=true;j.src=
     <header class="site-header" role="banner">
         <div class="emoji" aria-hidden="true">📋</div>
         <h1>フリーランス契約書チェックリスト</h1>
-        <p>フリーランス契約書の必須項目・注意点をチェックリスト形式で確認。トラブル防止...</p>
+        <p>契約トラブルを事前に防ぎましょう。6問の診断で契約書の安全度をチェック。</p>
     </header>
 
     <main id="main-content" class="container" role="main" aria-label="フリーランス契約書チェックリストのメインコンテンツ">
@@ -99,25 +111,43 @@ j=d.createElement(s),dl=l!="dataLayer"?"&l="+l:"";j.async=true;j.src=
 
         <div class="card" id="quiz-start">
           <h2 style="font-size:18px;font-weight:700;margin-bottom:12px;">📋 フリーランス契約書チェックリスト</h2>
-          <p style="color:#666;font-size:14px;margin-bottom:8px;">フリーランス契約書の必須項目・注意点をチェックリスト形式で確認。トラブル防止...</p>
+          <p style="color:#666;font-size:14px;margin-bottom:8px;">6つの質問に答えるだけで、契約書の抜け漏れ・リスク箇所を自動診断します。</p>
           <ul style="font-size:13px;color:#94a3b8;margin:0 0 16px 16px;"><li>質問数：6問</li><li>所要時間：約1分</li></ul>
           <button class="btn" onclick="startQuiz()">診断スタート →</button>
         </div>
         <div id="quiz-area" style="display:none;">
           <div style="font-size:12px;color:#999;margin-bottom:8px;">
-            質問 <span id="q-num">1</span> / <span id="q-total">5</span>
+            質問 <span id="q-num">1</span> / <span id="q-total">6</span>
           </div>
           <div id="q-progress" style="height:4px;background:#e5e7eb;border-radius:2px;margin-bottom:16px;">
             <div id="q-bar" style="height:100%;background:#7c3aed;border-radius:2px;transition:width .3s;width:20%;"></div>
           </div>
           <p id="q-text" style="font-size:16px;font-weight:600;margin-bottom:16px;"></p>
           <div id="q-options" class="space-y-2"></div>
+          <button id="q-back" class="q-back-btn" onclick="back()">← 前の質問に戻る</button>
         </div>
         <div class="result" id="result">
           <div class="card">
+            <!-- スコア表示 -->
+            <div style="text-align:center;margin-bottom:16px;">
+              <div id="r-score-num" style="font-size:36px;font-weight:700;color:#7c3aed;"></div>
+              <div style="font-size:12px;color:#94a3b8;margin-bottom:6px;">（12点満点）</div>
+              <div class="score-bar-wrap"><div id="r-score-bar" class="score-bar-inner"></div></div>
+            </div>
             <h3 id="r-title" style="font-size:18px;font-weight:700;margin-bottom:8px;color:#7c3aed;"></h3>
             <p id="r-desc" style="color:#444;font-size:14px;line-height:1.7;"></p>
-            <button class="btn" style="margin-top:16px;" onclick="location.reload()">もう一度診断</button>
+            <!-- 個別フィードバック -->
+            <div id="r-issues" class="issues-box" style="display:none;">
+              <h4>⚠️ 要確認・改善項目</h4>
+              <ul id="r-issues-list"></ul>
+            </div>
+            <!-- 結果シェア・印刷 -->
+            <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;">
+              <a id="r-share-x" href="#" target="_blank" rel="noopener" style="background:#1DA1F2;color:white;padding:8px 16px;border-radius:8px;font-size:13px;text-decoration:none;font-weight:600;min-height:44px;display:inline-flex;align-items:center;">𝕏 シェア</a>
+              <a id="r-share-line" href="#" target="_blank" rel="noopener" style="background:#00B900;color:white;padding:8px 16px;border-radius:8px;font-size:13px;text-decoration:none;font-weight:600;min-height:44px;display:inline-flex;align-items:center;">LINE</a>
+              <button onclick="window.print()" style="background:#64748b;color:white;padding:8px 16px;border-radius:8px;font-size:13px;border:none;font-weight:600;cursor:pointer;min-height:44px;">🖨️ 印刷</button>
+            </div>
+            <button class="btn" style="margin-top:12px;" onclick="location.reload()">もう一度診断</button>
           </div>
         </div>
 
@@ -188,8 +218,8 @@ j=d.createElement(s),dl=l!="dataLayer"?"&l="+l:"";j.async=true;j.src=
         </div>
     </main>
 
-    <footer style="text-align:center;padding:20px;color:white;font-size:12px;opacity:0.75;margin-top:8px;">
-        <p><a href="https://appadaycreator.github.io/" style="color:white;">AppADayCreator</a>
+    <footer style="text-align:center;padding:20px;color:white;font-size:12px;background:#374151;margin-top:8px;">
+        <p><a href="https://appadaycreator.com/" style="color:white;">AppADayCreator</a>
         | <a href="privacy-policy.html" style="color:white;">プライバシーポリシー</a>
         | <a href="terms.html" style="color:white;">利用規約</a>
         | <a href="contact.html" style="color:white;">お問い合わせ</a></p>
@@ -198,77 +228,128 @@ j=d.createElement(s),dl=l!="dataLayer"?"&l="+l:"";j.async=true;j.src=
     </footer>
 
     <script>
-    // ★ここだけ実装★
     const QUESTIONS = [
       {
         text: 'Q1. 契約書に業務範囲・成果物が明記されていますか？',
         opts: ['はっきり記載されている', '曖昧な部分がある', '記載がない'],
+        advice: ['業務範囲・成果物の記載が曖昧です。「何を・どこまで・いつまでに」を文書化するよう修正依頼しましょう', '業務範囲・成果物の記載がありません。署名前に必ず追記を依頼してください'],
       },
       {
         text: 'Q2. 報酬・支払い条件（金額・支払期日・振込手数料負担）は明確ですか？',
         opts: ['すべて明確に記載されている', '一部不明な点がある', '記載がない'],
+        advice: ['報酬・支払い条件に不明点があります。金額・支払期日・手数料負担の全てを明確化してもらいましょう', '報酬・支払い条件の記載がありません。未払いトラブルの原因になるため必ず追記を求めてください'],
       },
       {
         text: 'Q3. 著作権・知的財産権の帰属が記載されていますか？',
         opts: ['明確に記載されている', '不明確・解釈の余地がある', '記載がない'],
+        advice: ['著作権帰属の記載が不明確です。「完成物の著作権はXXに帰属する」という形で明確化してもらいましょう', '著作権帰属の記載がありません。制作物を後で再利用できなくなるリスクがあるため必須条項です'],
       },
       {
         text: 'Q4. 秘密保持条項（NDA）はありますか？',
         opts: ['ある', 'ない', '不明'],
+        advice: ['秘密保持条項（NDA）がありません。クライアント情報・業務内容の漏洩リスクに対応するため追記を依頼しましょう', '秘密保持条項の有無が不明です。契約書を再確認するか相手方に確認してください'],
       },
       {
         text: 'Q5. 契約解除・途中終了の条件が記載されていますか？',
         opts: ['記載されている', '曖昧な記載がある', '記載がない'],
+        advice: ['契約解除の条件が曖昧です。解除可能な事由・通知期間・その際の報酬精算方法を明確化してもらいましょう', '契約解除条件の記載がありません。途中でトラブルになった際に泣き寝入りするリスクがあります'],
       },
       {
         text: 'Q6. 損害賠償・責任範囲の制限条項がありますか？',
         opts: ['ある', 'ない', '不明'],
+        advice: ['損害賠償・責任制限条項がありません。万が一の際に報酬を超える賠償を求められるリスクがあります', '損害賠償の範囲が不明です。契約書を確認し「賠償額は受領報酬を上限とする」等の条項を追記してもらいましょう'],
       },
     ];
+
     function getResult(answers) {
       // 安心スコア: idx=0→2点, idx=1→1点, idx=2→0点
       const score = answers.reduce((s, a) => s + (2 - Math.min(a.idx, 2)), 0);
-      const max = QUESTIONS.length * 2; // 12点満点
+      const max = QUESTIONS.length * 2;
+      let title, desc;
       if (score >= 10) {
-        return {
-          title: '✅ 安心：比較的安全な契約書です',
-          desc: '主要な項目がそろっており、比較的安全な契約書と判断できます。ただし、署名前に全文を再度確認し、不明な点は相手方に確認・修正依頼することをお勧めします。',
-        };
+        title = '✅ 安心：比較的安全な契約書です';
+        desc = '主要な項目がそろっており、比較的安全な契約書と判断できます。ただし、署名前に全文を再度確認し、不明な点は相手方に確認・修正依頼することをお勧めします。';
       } else if (score >= 7) {
-        return {
-          title: '⚠️ 要確認：署名前に修正を',
-          desc: 'いくつか不明点や記載不足があります。署名する前に、不明な条項を明確にするよう相手方に依頼しましょう。業務範囲や支払い条件など重要事項は必ず書面で確認してください。',
-        };
+        title = '⚠️ 要確認：署名前に修正を';
+        desc = 'いくつか不明点や記載不足があります。署名する前に、不明な条項を明確にするよう相手方に依頼しましょう。業務範囲や支払い条件など重要事項は必ず書面で確認してください。';
       } else if (score >= 4) {
-        return {
-          title: '🚨 要注意：専門家への相談を強く推奨',
-          desc: '重要な事項が不足しています。このままサインすると後日トラブルになる可能性があります。弁護士や行政書士などの専門家に契約書のレビューを依頼することを強くお勧めします。',
-        };
+        title = '🚨 要注意：専門家への相談を強く推奨';
+        desc = '重要な事項が不足しています。このままサインすると後日トラブルになる可能性があります。弁護士や行政書士などの専門家に契約書のレビューを依頼することを強くお勧めします。';
       } else {
-        return {
-          title: '❌ 危険：このまま契約は避けるべき',
-          desc: '契約書として不備が多く、フリーランスの権利が全く守られていない状態です。このまま契約することは避け、必ず専門家（弁護士）に相談のうえ、適切な条項を盛り込んだ契約書を作成してもらってください。',
-        };
+        title = '❌ 危険：このまま契約は避けるべき';
+        desc = '契約書として不備が多く、フリーランスの権利が全く守られていない状態です。このまま契約することは避け、必ず専門家（弁護士）に相談のうえ、適切な条項を盛り込んだ契約書を作成してもらってください。';
       }
+      return { title, desc, score, max };
     }
-    // ★以下変更不要★
-    const BTN='#7c3aed'; let cur=0; const ans=[];
-    document.addEventListener('DOMContentLoaded',()=>{ document.getElementById('q-total').textContent=QUESTIONS.length; });
-    function startQuiz(){ cur=0;ans.length=0; document.getElementById('quiz-start').style.display='none'; document.getElementById('quiz-area').style.display='block'; document.getElementById('result').classList.remove('show'); renderQ(); }
-    function renderQ(){
-      const q=QUESTIONS[cur];
-      document.getElementById('q-num').textContent=cur+1;
-      document.getElementById('q-bar').style.width=((cur+1)/QUESTIONS.length*100)+'%';
-      document.getElementById('q-text').textContent=q.text;
-      document.getElementById('q-options').innerHTML=q.opts.map((o,i)=>`<button onclick="answer(${i})" style="width:100%;padding:12px;margin-bottom:8px;border:2px solid #e5e7eb;border-radius:10px;font-size:14px;cursor:pointer;background:#fff;text-align:left;">${o}</button>`).join('');
+
+    let cur = 0;
+    const ans = [];
+
+    function startQuiz() {
+      cur = 0; ans.length = 0;
+      document.getElementById('quiz-start').style.display = 'none';
+      document.getElementById('quiz-area').style.display = 'block';
+      document.getElementById('result').classList.remove('show');
+      renderQ();
     }
-    function answer(idx){ ans.push({idx}); cur++; if(cur>=QUESTIONS.length) showResult(); else renderQ(); }
-    function showResult(){
-      document.getElementById('quiz-area').style.display='none';
-      const r=getResult(ans);
-      document.getElementById('r-title').textContent=r.title;
-      document.getElementById('r-desc').textContent=r.desc;
+
+    function renderQ() {
+      const q = QUESTIONS[cur];
+      document.getElementById('q-num').textContent = cur + 1;
+      document.getElementById('q-bar').style.width = ((cur + 1) / QUESTIONS.length * 100) + '%';
+      document.getElementById('q-text').textContent = q.text;
+      document.getElementById('q-options').innerHTML = q.opts.map((o, i) => `<button class="quiz-opt" onclick="answer(${i})">${o}</button>`).join('');
+      document.getElementById('q-back').style.display = cur > 0 ? 'inline-block' : 'none';
+    }
+
+    function answer(idx) {
+      ans.push({ idx });
+      cur++;
+      if (cur >= QUESTIONS.length) showResult();
+      else renderQ();
+    }
+
+    function back() {
+      if (cur > 0) { ans.pop(); cur--; renderQ(); }
+    }
+
+    function showResult() {
+      document.getElementById('quiz-area').style.display = 'none';
+      const r = getResult(ans);
+
+      // スコアバー
+      document.getElementById('r-score-num').textContent = r.score + ' 点';
+      const pct = Math.round(r.score / r.max * 100);
+      const barColor = r.score >= 10 ? '#10b981' : r.score >= 7 ? '#f59e0b' : r.score >= 4 ? '#f97316' : '#ef4444';
+      const bar = document.getElementById('r-score-bar');
+      bar.style.background = barColor;
+      setTimeout(() => { bar.style.width = pct + '%'; }, 80);
+
+      // タイトル・説明
+      document.getElementById('r-title').textContent = r.title;
+      document.getElementById('r-desc').textContent = r.desc;
+
+      // 個別フィードバック
+      const issues = [];
+      ans.forEach((a, i) => { if (a.idx > 0) issues.push(QUESTIONS[i].advice[a.idx - 1]); });
+      const issuesBox = document.getElementById('r-issues');
+      if (issues.length > 0) {
+        issuesBox.style.display = 'block';
+        document.getElementById('r-issues-list').innerHTML = issues.map(t => `<li>${t}</li>`).join('');
+      } else {
+        issuesBox.style.display = 'none';
+      }
+
+      // シェアURL生成
+      const labelMap = { '✅ 安心：比較的安全な契約書です': '安心', '⚠️ 要確認：署名前に修正を': '要確認', '🚨 要注意：専門家への相談を強く推奨': '要注意', '❌ 危険：このまま契約は避けるべき': '危険' };
+      const label = labelMap[r.title] || r.title;
+      const shareText = encodeURIComponent(`【契約書診断】${label}（${r.score}/${r.max}点）\nフリーランス契約書チェックリストで診断しました。`);
+      const shareUrl = encodeURIComponent('https://appadaycreator.com/freelance-contract-checker/');
+      document.getElementById('r-share-x').href = `https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}&hashtags=フリーランス,契約書`;
+      document.getElementById('r-share-line').href = `https://line.me/R/msg/text/?${shareText}%0A${shareUrl}`;
+
       document.getElementById('result').classList.add('show');
+      setTimeout(() => document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
     }
     </script>
 </body>
