@@ -1,0 +1,67 @@
+Fetch this design file, read its readme, and implement the relevant aspects of the design. https://api.anthropic.com/v1/design/h/0-O09Be6ZCh37YerI-FX6g?open_file=index.html
+Implement: ## 指示
+ClaudeDesignによって作成されたデザインを効果的に反映してほしい。
+
+**必ず最初に以下のデザイン参照画像を Read tool で読み込み、配色・レイアウト・フォント・セクション構成を視覚的に把握してから実装を開始してください:**
+- （LPページ全体デザイン）
+- （サービスページデザイン）
+
+- LPページとサービスページのデザインを実際のWebサービスに反映する。
+- **LPページは必ず `lp/index.html` として新規作成すること**（ディレクトリが存在しない場合は `mkdir lp` で作成）
+- サービスページは既存の / を更新。ユーザの利用動線を優先にしつつデザイン変更して。
+- コンテンツの目的に合わせて良いが、PCでもモバイルでも見れるように調整してほしい。
+- 全体のトップページのサービスページへのリンクは、LPページのURL（/lp/）に変更する
+- 今回の新デザイン（LPページのテーマカラーや素材・文字フォント・画像など）を該当既存サービスの全ページに刷新すること
+
+## ⚠️ 作業スコープ（必ず守ること）
+
+**読み込み・編集するファイルはこれだけ：**
+- `index.html`（サービスページ）
+- `lp/index.html`（LPページ・存在しない場合は新規作成）
+- 既存の `.css` ファイル（存在する場合のみ）
+
+**それ以外のファイル（contact.html, privacy-policy.html, terms.html, usage.html 等）は読まない・触らない。**
+ディレクトリ探索・ファイル一覧取得も不要。上記ファイルを直接編集すること。
+
+## ⚠️ 必須：実装完了後に必ず以下を実行すること（ローカルサーバーテストは不要）
+
+```bash
+git add -A
+git commit -m "Apply: design update with LP page"
+git push origin main
+```
+
+**git push origin main を実行してから完了とすること。push 完了のログを確認すること。**
+ローカルHTTPサーバーでのテストは不要。push が完了した時点で作業完了。
+
+## Claude Design プロジェクト
+
+
+Claude Design で生成されたコンポーネント（JSX・CSS）やプロトタイプの構成・スタイルを参考に実装すること。
+
+## デザイン参照画像（ローカル）
+- LP全体デザイン:      
+- サービスページデザイン: 
+- アイコン素材シート:   
+- 分割済みアイコン:    /Users/masayukitokunaga/workspace/30service/freelance-contract-checker/assets/icons/split
+
+## 制約
+- GTM・GA4・AdSenseタグは変更しない
+- アフィリエイトリンクは変更しない
+- コアJSロジック（診断・計算ロジック）は変更しない
+
+## 対象プロジェクト
+299 フリーランス契約書チェックリスト freelance-contract-checker https://appadaycreator.com/freelance-contract-checker/
+/Users/masayukitokunaga/workspace/30service/freelance-contract-checker/
+
+## ②デザイン改善要約（反映すること）
+SUMMARY_JSON:{"a":["ソーシャルバッテリー回復アドバイスの具体化（施設別・シチュエーション別推奨）","複数のパーソナリティ軸追加（Big Five互換スコア表示）","スコア履歴の目安線表示（平均値・自分の傾向ライン）"],"b":["リトライボタンのうえに『診断結果を友人と共有』機能追加（結果比較モード）","GPT連携チャットで『あなたの内向度に合う職種・業務形態』提案","モバイル版：ボタンサイズ最小48px化・スワイプ対応"],"d":["メンタルヘルス連携：『疲れやすい環境チェック』と『回復時間の最適化シミュレーション』","働き方フィット診断：テレワーク向き度・リモートチーム参加適性スコア","職場・学校シーン別の『社交エネルギー消費量推定』と対策ガイド"],"seo_h1":"社交疲れ・内向度チェッカー | あなたのソーシャルバッテリーを診断・回復法を提案","seo_meta":"5問で内向型度とソーシャルバッテリーを診断。疲れやすい環境・回復方法・最適な働き方までアドバイス。登録不要・無料。","forbidden":["GTM-TXQGZRF9","G-ZDPNYD2875","ca-pub-8427583028015858","gtag","saveResult","loadHistory","getResult","renderGaugeChart","renderComparisonChart","renderHistoryList","copyResultToClipboard","downloadResultAsCSV","printResult","startQuiz","renderQ","answer","showResult"]}
+
+## 現在のindex.htmlの構成情報（事前読み込み済み・tool callでのファイル読み込み不要）
+<title>フリーランス契約書チェックリスト【無料】無料診断・アドバイス</title>
+<meta name="description" content="フリーランス契約書の必須項目・注意点をチェックリスト形式で確認。トラブル防止に">
+<!-- GTM: GTM-TXQGZRF9 -->
+<!-- AdSense: ca-pub-8427583028015858 -->
+<!-- Affiliate A8: a8.net/svt/ejp?a8mat=4B3WJA+7FZDKA+4EKW+NTJWY -->
+<!-- JS functions: getResult, startQuiz, renderQ, answer, back, showResult, saveToHistory, renderScoreChart, displayHistory, replayHistory, showResultDetails -->
+<h1>フリーランス契約書チェックリスト</h1>
